@@ -1,0 +1,16 @@
+[
+  {
+    "make": "Toyota",
+    "model": "Camry",
+    "year": 2019,
+    "mpg": 32.0,
+    "gas_type": "regular"
+  },
+  {
+    "make": "Honda",
+    "model": "Civic",
+    "year": 2020,
+    "mpg": 36.0,
+    "gas_type": "regular"
+  }
+]
