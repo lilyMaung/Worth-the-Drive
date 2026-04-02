@@ -190,14 +190,14 @@ def load_cars(filepath):
     
 #testing whether the json file works or not
 # create some cars
-car1 = Car("Toyota", "Camry", 2019, 32.0, "regular")
-car2 = Car("Honda", "Civic", 2020, 36.0, "regular")
+#car1 = Car("Toyota", "Camry", 2019, 32.0, "regular")
+#car2 = Car("Honda", "Civic", 2020, 36.0, "regular")
 
 # save to file
-save_cars([car1, car2], "cars.json")
-print("Saved!")
-
+#save_cars([car1, car2], "cars.json")
+#print("Saved!")
+ 
 # load back
-loaded = load_cars("cars.json")
-for car in loaded:
-    print(car.describe())
+#loaded = load_cars("cars.json")
+#for car in loaded:
+#    print(car.describe())
