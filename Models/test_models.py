@@ -224,3 +224,4 @@ def test_load_missing_file(tmp_path):
     filepath= tmp_path / "missing.json"
     result = load_cars(filepath)
     assert result == []
+
