@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import json
 
 class Car:
     VALID_GAS_TYPES = ["regular","midgrade","premium", "e85","gasoline", "diesel"]
@@ -158,9 +158,46 @@ class GasEstimate:
     "distance_miles": self.distance_miles,
     "traffic": traffic
 }
+
+#testing the models file     
+#car = Car("Toyota", "Camry", 2019, 32.0, "regular")
+#trip = Trip("Houston, TX", "Austin, TX", car)
+#estimate = GasEstimate(trip, gas_price=3.45, distance_miles=162.0)
+#result = estimate.calculate_gas_cost(traffic="mixed")
+#print(result)
+
+#using JSON to save and load the data
+
+#this function will turn the list of car objects into a dictionary usig to_dict()
+#you have to call to dict() on each individual car inside the cars list
+def save_cars(cars, filepath):
+        with open(filepath, "w")as file:
+            json.dump([car.to_dict() for car in cars], file, indent=2)
         
-car = Car("Toyota", "Camry", 2019, 32.0, "regular")
-trip = Trip("Houston, TX", "Austin, TX", car)
-estimate = GasEstimate(trip, gas_price=3.45, distance_miles=162.0)
-result = estimate.calculate_gas_cost(traffic="mixed")
-print(result)
+
+#reading the file and creeating car objects
+def load_cars(filepath):
+    try:
+        #with automatically closes the file when I am done
+        with open(filepath, "r") as file:
+            # right now each data is a dictionary
+            data= json.load(file)
+            # we need to turn each dictionary into a car object
+            # d is each loop while looping through data and Car object was created using each dictionary from the data
+            return [Car.from_dict(d)for d in data]
+    except FileNotFoundError as e:
+        return []
+    
+#testing whether the json file works or not
+# create some cars
+car1 = Car("Toyota", "Camry", 2019, 32.0, "regular")
+car2 = Car("Honda", "Civic", 2020, 36.0, "regular")
+
+# save to file
+save_cars([car1, car2], "cars.json")
+print("Saved!")
+
+# load back
+loaded = load_cars("cars.json")
+for car in loaded:
+    print(car.describe())
