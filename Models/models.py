@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 
 class Car:
-    VALID_GAS_TYPES = ["regular","midgrade","premium", "e85","gasoline", "diesel"]
+    VALID_GAS_TYPES = ["regular","midgrade","premium", "e85", "diesel"]
     """Car class"""
     def __init__(self, make: str, model: str, year: int, mpg: float, gas_type: str):
         self.make = make
