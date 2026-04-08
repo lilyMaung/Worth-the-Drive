@@ -1,8 +1,8 @@
-
-venv/   #thousands of library files that anyone can recreate with pip install, no need to store them
-__pycache__/    #python compiled bytecode files. Auto generated, not your code
-*.pyc   
-.env    #contains my secret API keys, cannot go on github
-.DS_Store   #mac system file, not your code
-
-#gitignore- telling Git to never touch these files, .env
+venv/
+__pycache__/
+*.pyc 
+.env
+.DS_Store
+.vscode/
+node_modules/
+.pytest_cache/
