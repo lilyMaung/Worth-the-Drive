@@ -5,4 +5,4 @@ __pycache__/    #python compiled bytecode files. Auto generated, not your code
 .env    #contains my secret API keys, cannot go on github
 .DS_Store   #mac system file, not your code
 
-#gitignore- telling Git to never touch these files, 
+#gitignore- telling Git to never touch these files, .env
