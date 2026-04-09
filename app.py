@@ -46,7 +46,7 @@ STATE_CODES ={
 
 def validate_inputs(data):
     # starting from the required input
-    required = ["start","destination","state","make","model","year","gas_type","traffic"]
+    required = ["start","destination","state","make","model","year","gas_type"]
 
     for field in required:
         if field not in data:
@@ -86,7 +86,7 @@ def health():
     return jsonify ({"status":"ok"}), 200
 
 # routing to calculate
-@app.route("/api/health", methods=["GET"])
+@app.route("/api/calculate", methods=["POST"])
 def calculate():
     data = request.get_json()
     if not data:
@@ -124,6 +124,6 @@ def calculate():
 if __name__== "__main__":
     # u have to include FLASK_DEBUG=true in your .env file in order for this to work
     debug_mode = os.getenv("FLASK_DEBUG", "false").lower() =="true"
-    app.run(debug=debug_mode, port=8000)
+    app.run(debug=debug_mode, port=8080)
 
     
