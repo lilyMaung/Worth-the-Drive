@@ -122,5 +122,8 @@ def calculate():
 
 
 if __name__== "__main__":
+    # u have to include FLASK_DEBUG=true in your .env file in order for this to work
     debug_mode = os.getenv("FLASK_DEBUG", "false").lower() =="true"
     app.run(debug=debug_mode, port=8000)
+
+    
