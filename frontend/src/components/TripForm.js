@@ -376,6 +376,10 @@ fetchModels();
                     onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.08)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
                     onClick={() => { setFormData({ ...formData, start: s }); setStartSuggestions([]); }}
+                    onMouseDown={(e) => {e.preventDefault(); 
+                              setFormData({ ...formData, start: s});
+                              setStartSuggestions([]);
+                    }}
                   >
                     <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>📍</span>
                     {s}
@@ -411,6 +415,9 @@ fetchModels();
                     onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.08)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
                     onClick={() => { setFormData({ ...formData, destination: s }); setDestSuggestions([]); }}
+                    onMouseDown={(e) => {e.preventDefault(); 
+                              setFormData({ ...formData, destination: s});
+                              setStartSuggestions([]);}}
                   >
                     <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>📍</span>
                     {s}
