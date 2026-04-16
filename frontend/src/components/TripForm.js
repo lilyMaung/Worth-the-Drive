@@ -67,7 +67,6 @@ const timer = setTimeout(async()=>
   try
   {
     const res = await fetch (
-      
       `https://worth-the-drive-lily.onrender.com/api/autocomplete?q=${formData.start}`
     );
     
@@ -139,7 +138,7 @@ useEffect (() =>
   {
     setMakes([]);
     // this is to reset to previous state because the year depends on the model
-    setFormData(prev => ({...prev, make: '', model:''}));
+    setFormData(prev => ({ ...prev, make: '', model:''}));
     return;
   }
 
@@ -212,8 +211,7 @@ fetchModels();
   // e.target.name tells us which field changed
   // e.target.value tells us what the user typed
   const handleChange = (e) => {
-    setFormData({
-      ...formData,                    // keep all existing values
+    setFormData({ ...formData,                    // keep all existing values
       [e.target.name]: e.target.value // update only the changed field
     });
   };
