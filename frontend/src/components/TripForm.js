@@ -1,5 +1,5 @@
 import React, { useState , useEffect} from 'react';
-
+import Select from 'react-select';
 
 
 
@@ -14,6 +14,14 @@ const STATES = [
   "NY","NC","ND","OH","OK","OR","PA","RI","SC","SD",
   "TN","TX","UT","VT","VA","WA","WV","WI","WY","DC"
 ];
+// for the option lists for your STATES array
+const STATES_OPTIONS = STATES.map (s=> ({
+    value: s,
+    label: `${STATE_NAMES[s]} (${s})`
+
+}));
+
+
 
 // onResult is a function passed down from App.js
 // when we get a result we call onResult(data) to send it back up
@@ -417,20 +425,50 @@ fetchModels();
         {/* State */}
         <div>
           <label style={labelStyle}>State (for gas price)</label>
-          <select
-            name="state"
-            value={formData.state}
-            onChange={handleChange}
-            style={inputStyle}
-            required
-            onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
-            onBlur={e  => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
-          >
-            <option value="">Select your state</option>
-            {STATES.map(s => (
-              <option key={s} value={s}>{STATES[s]} ({s})</option>
-            ))}
-          </select>
+          <Select
+    options={STATE_OPTIONS}
+    onChange={(selected) => setFormData({
+        ...formData,
+        state: selected ? selected.value : ''
+    })}
+    placeholder="Search your state..."
+    styles={{
+        control: (base) => ({
+            ...base,
+            background: 'var(--bg-input)',
+            border: '1px solid var(--border)',
+            borderRadius: 12,
+            padding: '4px 4px',
+            color: 'var(--text-primary)',
+            fontSize: 14,
+            boxShadow: 'none',
+        }),
+        menu: (base) => ({
+            ...base,
+            background: '#1e1e2a',
+            border: '1px solid var(--border)',
+            borderRadius: 12,
+        }),
+        option: (base, state) => ({
+            ...base,
+            background: state.isFocused ? 'rgba(99,102,241,0.1)' : 'transparent',
+            color: 'var(--text-primary)',
+            fontSize: 13,
+        }),
+        singleValue: (base) => ({
+            ...base,
+            color: 'var(--text-primary)',
+        }),
+        input: (base) => ({
+            ...base,
+            color: 'var(--text-primary)',
+        }),
+        placeholder: (base) => ({
+            ...base,
+            color: 'var(--text-muted)',
+        }),
+    }}
+/>
         </div>
       </div>
  
