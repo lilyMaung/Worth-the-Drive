@@ -254,167 +254,387 @@ fetchModels();
     }
   };
 
-  // ── STYLES ───────────────────────────────────────────
-  const inputClass = "w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50";
-
+  // ── Shared styles ────────────────────────────────────
+  const card = {
+    background: 'var(--bg-card)',
+    border: '1px solid var(--border)',
+    borderRadius: 20,
+    padding: '24px',
+    marginBottom: 12,
+  };
+ 
+  const inputStyle = {
+    width: '100%',
+    background: 'var(--bg-input)',
+    border: '1px solid var(--border)',
+    borderRadius: 12,
+    padding: '12px 16px',
+    fontSize: 14,
+    color: 'var(--text-primary)',
+    outline: 'none',
+    transition: 'border-color 0.15s, box-shadow 0.15s',
+    fontFamily: 'var(--font-body)',
+  };
+ 
+  const labelStyle = {
+    display: 'block',
+    fontSize: 11,
+    fontWeight: 600,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    color: 'var(--text-muted)',
+    marginBottom: 8,
+  };
+ 
+  const sectionTitle = {
+    fontSize: 13,
+    fontWeight: 600,
+    color: 'var(--text-secondary)',
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
+    marginBottom: 18,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+  };
+ 
+  const suggestionBox = {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    zIndex: 30,
+    background: '#1e1e2a',
+    border: '1px solid var(--border)',
+    borderRadius: 12,
+    marginTop: 4,
+    overflow: 'hidden',
+    boxShadow: '0 16px 40px rgba(0,0,0,0.5)',
+  };
+ 
+  const suggestionItem = {
+    padding: '11px 16px',
+    fontSize: 13,
+    color: 'var(--text-secondary)',
+    cursor: 'pointer',
+    borderBottom: '1px solid var(--border)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    transition: 'background 0.1s, color 0.1s',
+  };
+ 
   // ── JSX ──────────────────────────────────────────────
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-lg p-8">
-
-      {/* ROUTE SECTION */}
-      <h2 className="font-bold text-gray-700 text-lg mb-4">📍 Route</h2>
-      <div className="grid grid-cols-2 gap-4 mb-4">
-
-        {/* start with autocomplete */}
-        <div className="relative">
-          <label className="text-xs font-medium text-gray-500 mb-1 block">From</label>
-          <input
-            name="start"
-            value={formData.start}
+    <form onSubmit={handleSubmit}>
+ 
+      {/* ── ROUTE SECTION ── */}
+      <div style={card} className="fade-up fade-up-delay-1">
+        <p style={sectionTitle}>
+          <span style={{
+            background: 'rgba(99,102,241,0.15)',
+            border: '1px solid rgba(99,102,241,0.2)',
+            borderRadius: 8, padding: '3px 8px',
+            color: 'var(--accent-light)', fontSize: 16,
+          }}></span>
+          Choose Your Route
+        </p>
+ 
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+ 
+          {/* Start with autocomplete */}
+          <div style={{ position: 'relative' }}>
+            <label style={labelStyle}>From</label>
+            <input
+              name="start"
+              value={formData.start}
+              onChange={handleChange}
+              placeholder="City, State"
+              style={inputStyle}
+              required
+              autoComplete="off"
+              onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+              onBlur={e  => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
+            />
+            {startSuggestions.length > 0 && (
+              <div style={suggestionBox}>
+                {startSuggestions.map((s, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      ...suggestionItem,
+                      borderBottom: i === startSuggestions.length - 1 ? 'none' : '1px solid var(--border)',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.08)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+                    onClick={() => { setFormData({ ...formData, start: s }); setStartSuggestions([]); }}
+                  >
+                    <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>📍</span>
+                    {s}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+ 
+          {/* Destination with autocomplete */}
+          <div style={{ position: 'relative' }}>
+            <label style={labelStyle}>To</label>
+            <input
+              name="destination"
+              value={formData.destination}
+              onChange={handleChange}
+              placeholder="City, State"
+              style={inputStyle}
+              required
+              autoComplete="off"
+              onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+              onBlur={e  => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
+            />
+            {destSuggestions.length > 0 && (
+              <div style={suggestionBox}>
+                {destSuggestions.map((s, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      ...suggestionItem,
+                      borderBottom: i === destSuggestions.length - 1 ? 'none' : '1px solid var(--border)',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.08)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+                    onClick={() => { setFormData({ ...formData, destination: s }); setDestSuggestions([]); }}
+                  >
+                    <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>📍</span>
+                    {s}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+ 
+        </div>
+ 
+        {/* State */}
+        <div>
+          <label style={labelStyle}>State (for gas price)</label>
+          <select
+            name="state"
+            value={formData.state}
             onChange={handleChange}
-            placeholder="Houston, TX"
-            className={inputClass}
+            style={inputStyle}
             required
-            autoComplete="off"
-          />
-          {startSuggestions.length > 0 && (
-            <div className="absolute z-10 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-1">
-              {startSuggestions.map((s, i) => (
-                <div
-                  key={i}
-                  className="px-4 py-2 text-sm hover:bg-blue-50 cursor-pointer"
-                  onClick={() => {
-                    setFormData({ ...formData, start: s });
-                    setStartSuggestions([]);
-                  }}
-                >
-                  {s}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* destination with autocomplete */}
-        <div className="relative">
-          <label className="text-xs font-medium text-gray-500 mb-1 block">To</label>
-          <input
-            name="destination"
-            value={formData.destination}
-            onChange={handleChange}
-            placeholder="Austin, TX"
-            className={inputClass}
-            required
-            autoComplete="off"
-          />
-          {destSuggestions.length > 0 && (
-            <div className="absolute z-10 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-1">
-              {destSuggestions.map((s, i) => (
-                <div
-                  key={i}
-                  className="px-4 py-2 text-sm hover:bg-blue-50 cursor-pointer"
-                  onClick={() => {
-                    setFormData({ ...formData, destination: s });
-                    setDestSuggestions([]);
-                  }}
-                >
-                  {s}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-      </div>
-
-      {/* STATE */}
-      <div className="mb-6">
-        <label className="text-xs font-medium text-gray-500 mb-1 block">State (for gas price)</label>
-        <select name="state" value={formData.state} onChange={handleChange} className={inputClass} required>
-          <option value="">Select your state</option>
-          {STATES.map(s => <option key={s} value={s}>{s}</option>)}
-        </select>
-      </div>
-
-      {/* CAR SECTION */}
-      <h2 className="font-bold text-gray-700 text-lg mb-4">🚘 Your Car</h2>
-      <div className="grid grid-cols-3 gap-4 mb-4">
-
-        {/* year first */}
-        <div>
-          <label className="text-xs font-medium text-gray-500 mb-1 block">Year</label>
-          <input
-            name="year"
-            value={formData.year}
-            onChange={handleChange}
-            placeholder="2020"
-            className={inputClass}
-            required
-          />
-        </div>
-
-        {/* make - dropdown when loaded, text input otherwise */}
-        <div>
-          <label className="text-xs font-medium text-gray-500 mb-1 block">Make</label>
-          {makes.length > 0 ? (
-            <select name="make" value={formData.make} onChange={handleChange} className={inputClass} required>
-              <option value="">Select make</option>
-              {makes.map(m => <option key={m} value={m}>{m}</option>)}
-            </select>
-          ) : (
-            <input name="make" value={formData.make} onChange={handleChange} placeholder="Toyota" className={inputClass} required />
-          )}
-        </div>
-
-        {/* model - dropdown when loaded, text input otherwise */}
-        <div>
-          <label className="text-xs font-medium text-gray-500 mb-1 block">Model</label>
-          {models.length > 0 ? (
-            <select name="model" value={formData.model} onChange={handleChange} className={inputClass} required>
-              <option value="">Select model</option>
-              {models.map(m => <option key={m} value={m}>{m}</option>)}
-            </select>
-          ) : (
-            <input name="model" value={formData.model} onChange={handleChange} placeholder="Camry" className={inputClass} required />
-          )}
-        </div>
-
-      </div>
-
-      {/* GAS TYPE AND TRAFFIC */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div>
-          <label className="text-xs font-medium text-gray-500 mb-1 block">Gas Type</label>
-          <select name="gas_type" value={formData.gas_type} onChange={handleChange} className={inputClass}>
-            {GAS_TYPES.map(g => <option key={g} value={g}>{g}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className="text-xs font-medium text-gray-500 mb-1 block">Traffic</label>
-          <select name="traffic" value={formData.traffic} onChange={handleChange} className={inputClass}>
-            {TRAFFIC_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+            onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+            onBlur={e  => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
+          >
+            <option value="">Select your state</option>
+            {STATES.map(s => (
+              <option key={s} value={s}>{STATES[s]} ({s})</option>
+            ))}
           </select>
         </div>
       </div>
-
-      {/* ERROR */}
+ 
+      {/* ── CAR SECTION ── */}
+      <div style={card} className="fade-up fade-up-delay-2">
+        <p style={sectionTitle}>
+          <span style={{
+            background: 'rgba(245,158,11,0.12)',
+            border: '1px solid rgba(245,158,11,0.2)',
+            borderRadius: 8, padding: '3px 8px',
+            color: '#fbbf24', fontSize: 15,
+          }}>🚘</span>
+          Your Car
+        </p>
+ 
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 12 }}>
+ 
+          {/* Year first */}
+          <div>
+            <label style={labelStyle}>Year</label>
+            <input
+              name="year"
+              value={formData.year}
+              onChange={handleChange}
+              placeholder="2020"
+              maxLength={4}
+              style={inputStyle}
+              required
+              onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+              onBlur={e  => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
+            />
+          </div>
+ 
+          {/* Make - dropdown when loaded */}
+          <div>
+            <label style={labelStyle}>
+              Make
+              {formData.year.length === 4 && makes.length === 0 && (
+                <span style={{ color: 'var(--accent-light)', marginLeft: 6, fontWeight: 400 }}>loading…</span>
+              )}
+            </label>
+            {makes.length > 0 ? (
+              <select
+                name="make"
+                value={formData.make}
+                onChange={handleChange}
+                style={inputStyle}
+                required
+                onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+                onBlur={e  => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
+              >
+                <option value="">Select make</option>
+                {makes.map(m => <option key={m} value={m}>{m}</option>)}
+              </select>
+            ) : (
+              <input
+                name="make"
+                value={formData.make}
+                onChange={handleChange}
+                placeholder={formData.year.length === 4 ? '...' : 'Enter year first'}
+                style={{ ...inputStyle, opacity: formData.year.length !== 4 ? 0.5 : 1 }}
+                onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+                onBlur={e  => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
+              />
+            )}
+          </div>
+ 
+          {/* Model - dropdown when loaded */}
+          <div>
+            <label style={labelStyle}>
+              Model
+              {formData.make && models.length === 0 && (
+                <span style={{ color: 'var(--accent-light)', marginLeft: 6, fontWeight: 400 }}>loading…</span>
+              )}
+            </label>
+            {models.length > 0 ? (
+              <select
+                name="model"
+                value={formData.model}
+                onChange={handleChange}
+                style={inputStyle}
+                required
+                onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+                onBlur={e  => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
+              >
+                <option value="">Select model</option>
+                {models.map(m => <option key={m} value={m}>{m}</option>)}
+              </select>
+            ) : (
+              <input
+                name="model"
+                value={formData.model}
+                onChange={handleChange}
+                placeholder={formData.make ? '...' : 'Select make first'}
+                style={{ ...inputStyle, opacity: !formData.make ? 0.5 : 1 }}
+                onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+                onBlur={e  => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
+              />
+            )}
+          </div>
+ 
+        </div>
+ 
+        {/* Gas type and traffic */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div>
+            <label style={labelStyle}>Fuel Type</label>
+            <select
+              name="gas_type"
+              value={formData.gas_type}
+              onChange={handleChange}
+              style={inputStyle}
+              onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+              onBlur={e  => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
+            >
+              {GAS_TYPES.map(g => (
+                <option key={g} value={g}>{g.charAt(0).toUpperCase() + g.slice(1)}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label style={labelStyle}>Expected Traffic</label>
+            <select
+              name="traffic"
+              value={formData.traffic}
+              onChange={handleChange}
+              style={inputStyle}
+              onFocus={e => { e.target.style.borderColor = 'var(--border-focus)'; e.target.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.1)'; }}
+              onBlur={e  => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none'; }}
+            >
+              {TRAFFIC_TYPES.map(t => (
+                <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+ 
+      {/* ── ERROR ── */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm mb-4">
-          ⚠️ {error}
+        <div style={{
+          background: 'rgba(248,113,113,0.08)',
+          border: '1px solid rgba(248,113,113,0.2)',
+          borderRadius: 14,
+          padding: '14px 18px',
+          marginBottom: 12,
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: 12,
+        }} className="fade-up">
+          <span style={{ fontSize: 16, marginTop: 1 }}>⚠️</span>
+          <div>
+            <p style={{ color: 'var(--error)', fontWeight: 600, fontSize: 13, marginBottom: 2 }}>
+              Something went wrong
+            </p>
+            <p style={{ color: 'rgba(248,113,113,0.7)', fontSize: 13 }}>{error}</p>
+          </div>
         </div>
       )}
-
-      {/* SUBMIT */}
+ 
+      {/* ── SUBMIT BUTTON ── */}
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold py-4 rounded-2xl transition-all disabled:opacity-50 text-lg"
+        style={{
+          width: '100%',
+          background: loading
+            ? 'rgba(99,102,241,0.5)'
+            : 'linear-gradient(135deg, #6366f1, #4f46e5)',
+          border: 'none',
+          borderRadius: 16,
+          padding: '16px 24px',
+          fontSize: 15,
+          fontWeight: 600,
+          color: 'white',
+          cursor: loading ? 'not-allowed' : 'pointer',
+          fontFamily: 'var(--font-body)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 10,
+          transition: 'all 0.2s',
+          boxShadow: loading ? 'none' : '0 8px 32px rgba(99,102,241,0.3)',
+          letterSpacing: '0.01em',
+        }}
+        onMouseEnter={e => { if (!loading) { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(99,102,241,0.4)'; }}}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = loading ? 'none' : '0 8px 32px rgba(99,102,241,0.3)'; }}
+        onMouseDown={e  => { if (!loading) e.currentTarget.style.transform = 'translateY(0) scale(0.99)'; }}
+        onMouseUp={e    => { if (!loading) e.currentTarget.style.transform = 'translateY(-1px)'; }}
       >
-        {loading ? '⏳ Calculating...' : '⚡ Calculate Trip Cost'}
+        {loading ? (
+          <>
+            <span className="spinner" />
+            Calculating your trip...
+          </>
+        ) : (
+          <>
+            Calculate Trip Cost
+            <span style={{ fontSize: 16 }}>→</span>
+          </>
+        )}
       </button>
-
+ 
     </form>
   );
 }
-
-export default TripForm;
+ export default TripForm;

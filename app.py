@@ -9,6 +9,13 @@ from dotenv import load_dotenv
 from services.calculator import calculate_trip_cost
 #to validate the year 
 import datetime
+# for autocomplete function
+import requests
+
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 #The very first thing to call than everything else, this is loading the environment variables from .env
 load_dotenv()
@@ -19,7 +26,7 @@ app = Flask(__name__)
 
 #Enabling the CORS, telling browsers it's okay requests from other browsers
 #To do- to make sure, it only accept requests from your front-end browser, put origins = ["my frontend"]
-CORS(app)
+CORS(app, origins=['http://localhost:3000'])
 
 
 # option lists, CONSTANT VALUES 
@@ -119,6 +126,116 @@ def calculate():
         return jsonify({
         "error": "Something went wrong. Please try again."
     }), 500
+
+#autocomplete functions for location
+@app.route("/api/autocomplete", methods=["GET"])
+def autocomplete():
+    #we need a search query string for whatever the user typed
+    # read the search query from URL like /api/autocomplete
+    # reads ?a=Los from the URL 
+    query = request.args.get("q", "")
+
+    #to not call the API over short queries
+    if len(query)<3:
+        return jsonify([]), 200
+    
+    #getting api geonify key from the .env
+    geo_api_key = os.getenv("GEOAPIFY_API_KEY")
+
+    #building the geonify url
+
+    geo_url = f"https://api.geoapify.com/v1/geocode/autocomplete?text={query}&type=city&limit=5&apiKey={geo_api_key}"
+
+    try:
+        response = requests.get(geo_url, verify=False)
+        data = response.json()
+    
+    
+        # extract just the city names from the response
+        suggestions =[]
+
+        for feature in data.get("features",[]):
+            suggestions.append(feature["properties"]["formatted"])
+            print(f"API key: {geo_api_key}")  
+            print(f"Query: {query}")   
+        return jsonify (suggestions), 200
+    except Exception as e:
+        print(f"Autocomplete failed: {e}")
+        return jsonify([]), 200
+
+# this will return car makes for that year
+# POST has data in body 
+# GET has data in url
+@app.route("/api/vehicles/makes", methods=["GET"])
+#input will be year 
+def get_makes():
+    # read year from URL 
+    year = request.args.get("year", "")
+
+    #validating the year it has to be four digit
+    if len(year) != 4:
+        return jsonify([]), 200
+    
+    try:
+        import xmltodict
+
+        # same API from NHTSA.py 
+        url = f"https://www.fueleconomy.gov/ws/rest/vehicle/menu/make?year={year}"
+        response = requests.get(url, verify=False)
+
+        # parsing XML to dict
+        data = xmltodict.parse(response.text)
+        items = data["menuItems"]["menuItem"]
+
+        #handling single result vs list 
+        if not isinstance (items, list):
+            items =[items]
+
+        # extracting the text value (make name) from each
+        makes = [item["text"]for item in items]
+        return jsonify(makes), 200
+    
+    except Exception as e:
+        print(f"Makes error: {e}")
+        return jsonify([]), 200
+
+# this will return in a drop down if the user calls year from react and other will be in a drop down
+# input- both year AND make to find models
+# output- a list of model strings 
+@app.route("/api/vehicles/models", methods=["GET"])
+def get_models():
+    year = request.args.get("year","")
+    make = request.args.get("make","")
+
+    #both are requried
+    if not year or not make:
+        return jsonify([]), 200
+    try:
+        import xmltodict
+
+        url = f"https://www.fueleconomy.gov/ws/rest/vehicle/menu/model?year={year}&make={make}"
+        response = requests.get(url, verify=False)
+
+        #parsing through the data 
+        data = xmltodict.parse(response.text)
+
+        items = data["menuItems"]["menuItem"]
+        
+        if not isinstance (items, list):
+            items =[items]
+
+        models = [item["text"] for item in items]
+
+        return jsonify(models), 200
+
+    except Exception as e:
+        print(f"Models error: {e}")
+        return jsonify([]), 200
+    
+
+
+
+
 
 
 if __name__== "__main__":
