@@ -67,7 +67,8 @@ const timer = setTimeout(async()=>
   try
   {
     const res = await fetch (
-      `http://localhost:8080/api/autocomplete?q=${formData.start}`
+      
+      `https://worth-the-drive-lily.onrender.com/api/autocomplete?q=${formData.start}`
     );
     
     const data = await res.json();
@@ -107,7 +108,7 @@ const timer = setTimeout(async()=>
   try
   {
     const res = await fetch (
-      `http://localhost:8080/api/autocomplete?q=${formData.destination}`
+      `https://worth-the-drive-lily.onrender.com/api/autocomplete?q=${formData.destination}`
     );
     
     const data = await res.json();
@@ -138,7 +139,7 @@ useEffect (() =>
   {
     setMakes([]);
     // this is to reset to previous state because the year depends on the model
-    setFormData (prev => ({... prev, make: '', model:''}));
+    setFormData(prev => ({...prev, make: '', model:''}));
     return;
   }
 
@@ -148,7 +149,7 @@ useEffect (() =>
     try{
 
       const res = await fetch (
-        `http://localhost:8080/api/vehicles/makes?year=${formData.year}`
+        `https://worth-the-drive-lily.onrender.com/api/vehicles/makes?year=${formData.year}`
       );
 
       const data = await res.json();
@@ -184,7 +185,7 @@ try {
 
 const res = await fetch (
 
-   `http://localhost:8080/api/vehicles/models?year=${formData.year}&make=${formData.make}`);
+   `https://worth-the-drive-lily.onrender.com/api/vehicles/models?year=${formData.year}&make=${formData.make}`);
   
 
 
@@ -225,7 +226,7 @@ fetchModels();
 
     try {
       // call Flask API
-      const response = await fetch('http://localhost:8080/api/calculate', {
+      const response = await fetch('https://worth-the-drive-lily.onrender.com/api/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
