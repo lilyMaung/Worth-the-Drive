@@ -26,7 +26,10 @@ app = Flask(__name__)
 
 #Enabling the CORS, telling browsers it's okay requests from other browsers
 #To do- to make sure, it only accept requests from your front-end browser, put origins = ["my frontend"]
-CORS(app, origins=['http://localhost:3000'])
+CORS(app, origins=['http://localhost:3000',
+                   #will update after vercel deployment
+                   'https://worth-the-drive-lily.vercel.app/'
+                   ])
 
 
 # option lists, CONSTANT VALUES 
