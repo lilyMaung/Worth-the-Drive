@@ -28,7 +28,9 @@ app = Flask(__name__)
 #To do- to make sure, it only accept requests from your front-end browser, put origins = ["my frontend"]
 CORS(app, origins=['http://localhost:3000',
                    #will update after vercel deployment
-                   'https://worth-the-drive-lily.vercel.app'
+                   'https://worth-the-drive-lily.vercel.app',
+
+                   
                    ])
 
 
