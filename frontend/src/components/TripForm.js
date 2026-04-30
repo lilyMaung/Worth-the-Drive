@@ -42,7 +42,7 @@ const STATE_OPTIONS = STATES.map(s => ({
 
 // FIX 3: Geoapify key from environment variable instead of hardcoded
 // REACT_APP_ prefix is required for React to read env variables
-const GEOAPIFY_KEY = process.env.REACT_APP_GEOAPIFY_KEY;
+const GEOAPIFY_API_KEY = process.env.REACT_APP_GEOAPIFY_KEY;
 
 // onResult is a function passed down from App.js
 // when we get a result we call onResult(data) to send it back up
@@ -111,7 +111,7 @@ function TripForm({ onResult })
       const res = await fetch (
         // making HTTP requests, same thing that Postman does but javascript built in function 
         // FIX: use GEOAPIFY_KEY env variable instead of hardcoded key
-        `https://api.geoapify.com/v1/geocode/autocomplete?text=${query}&type=city&limit=5&apiKey=${GEOAPIFY_KEY}`
+        `https://api.geoapify.com/v1/geocode/autocomplete?text=${query}&type=city&limit=5&apiKey=${GEOAPIFY_API_KEY}`
       );
 
       //await pauses execution until the response comes bak
