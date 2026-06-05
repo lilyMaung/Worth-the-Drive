@@ -47,7 +47,7 @@ lilydb.init_app(app)
 # creating tables on startup
 # reads my class definitions and creates tables in PostgreSQL if they don't exist
 with app.app_context():
-    lilydb.create_all
+    lilydb.create_all()
 
 
 
