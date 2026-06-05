@@ -210,7 +210,7 @@ function TripForm({ onResult })
     {
       try{
         const res = await fetch (
-          `https://worth-the-drive-lily.onrender.com/api/vehicles/makes?year=${formData.year}`
+          `https://worth-the-drive-ln09.onrender.com/api/vehicles/makes?year=${formData.year}`
         );
         const data = await res.json();
         setMakes(data);
@@ -235,7 +235,7 @@ function TripForm({ onResult })
     {
       try {
         const res = await fetch (
-          `https://worth-the-drive-lily.onrender.com/api/vehicles/models?year=${formData.year}&make=${formData.make}`
+          `https://worth-the-drive-ln09.onrender.com/api/vehicles/models?year=${formData.year}&make=${formData.make}`
         );
         const data = await res.json();
         setModels(data);
@@ -265,7 +265,7 @@ function TripForm({ onResult })
 
     try {
       // call Flask API
-      const response = await fetch('https://worth-the-drive-lily.onrender.com/api/calculate', {
+      const response = await fetch('https://worth-the-drive-ln09.onrender.com/api/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
