@@ -7,7 +7,8 @@ from flask_cors import CORS
 #import the function that reads .env file & loads everything into my environment
 from dotenv import load_dotenv
 from services.calculator import calculate_trip_cost
-#to validate the year 
+# importing database and the table model, so that we can save the trip history to the database after we calculate the trip cost
+from database import lilydb, TripHistory
 import datetime
 # for autocomplete function
 import requests
@@ -32,6 +33,22 @@ CORS(app, origins=['http://localhost:3000',
 
                    
                    ])
+
+#connecting the database to flask
+#configuring the database url
+# reading the database url from my .env file
+# SQLALCHEMY_DATABASE_URI is the key that flask_sqlalchemy looks for to know where the database is located
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+# to disable a function that uses extra memory  
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# this will connect the database to the flask app
+lilydb.init_app(app)
+
+# creating tables on startup
+# reads my class definitions and creates tables in PostgreSQL if they don't exist
+with app.app_context():
+    lilydb.create_all
+
 
 
 # option lists, CONSTANT VALUES 
@@ -123,6 +140,25 @@ def calculate():
     #if the vehicle wasn't found in NHTSA database, 404-not found
         if result is None:
             return jsonify({"error": "Could not calculate trip. Check your vehicle details."}), 404
+        try:
+            trip = TripHistory(
+                start=start,
+                destination=destination,
+                state=state,
+                make=make,
+                model=model,
+                year=year,
+                gas_type=gas_type,
+                traffic=traffic,
+                total_cost=result["total_cost"],
+                distance=result["distance_miles"],
+                gallons=result["gallons_used"]
+            )
+            lilydb.session.add(trip)
+            lilydb.session.commit()
+        except Exception as e:
+            print(f"Could not save the trip: {e}")
+            
         return jsonify(result), 200
     except Exception as e:
         #for debugging
@@ -236,8 +272,20 @@ def get_models():
     except Exception as e:
         print(f"Models error: {e}")
         return jsonify([]), 200
-    
 
+# a new end point for saving the trip
+# GET because we are trying to fetch data  
+@app.route("/api/trips/history", methods=["GET"])
+def trip_history():
+    try:
+        trips = TripHistory.query\
+            .order_by(TripHistory.create_at.desc())\
+            .limit(10)\
+            .all()
+        return jsonify([t.to_dict() for t in trips]), 200
+    except Exception as e:
+        print(f"The database history cannot be fetched: {e}")
+        return jsonify([]), 200
 
 
 
