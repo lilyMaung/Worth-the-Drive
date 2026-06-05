@@ -1,6 +1,7 @@
 import React, { useState , useEffect} from 'react';
 import Select from 'react-select';
 
+const API_URL = "https://worth-the-drive-lno9.onrender.com";
 
 
 //useEffect lets my code run when sth changes
@@ -210,7 +211,7 @@ function TripForm({ onResult })
     {
       try{
         const res = await fetch (
-          ` https://worth-the-drive-lno9.onrender.com/api/vehicles/makes?year=${formData.year}`
+          ` ${API_URL}/api/vehicles/makes?year=${formData.year}`
         );
         const data = await res.json();
         setMakes(data);
@@ -235,7 +236,7 @@ function TripForm({ onResult })
     {
       try {
         const res = await fetch (
-          ` https://worth-the-drive-lno9.onrender.com/api/vehicles/models?year=${formData.year}&make=${formData.make}`
+          ` ${API_URL}/api/vehicles/models?year=${formData.year}&make=${formData.make}`
         );
         const data = await res.json();
         setModels(data);
@@ -265,7 +266,7 @@ function TripForm({ onResult })
 
     try {
       // call Flask API
-      const response = await fetch(' https://worth-the-drive-lno9.onrender.com/api/calculate', {
+      const response = await fetch(`${API_URL}/api/calculate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
