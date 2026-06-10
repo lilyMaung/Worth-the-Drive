@@ -34,22 +34,34 @@ CORS(app, origins=['http://localhost:3000',
                    
                    ])
 
-#connecting the database to flask
-#configuring the database url
+# connecting the database to flask
+# configuring the database url
 # reading the database url from my .env file
-# SQLALCHEMY_DATABASE_URI is the key that flask_sqlalchemy looks for to know where the database is located
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
-# to disable a function that uses extra memory  
+database_url = os.getenv("DATABASE_URL")
+
+#to fix our postgres:// to postgresql:// for SQLAlchemy
+if database_url and database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://",1)
+
+if not database_url:
+    database_url= "sqlite:///trips.db"
+    print("Warning: no DATABASE_URL")
+# SQLALCHEMY_DATABASE_URI is the key that SQLAlchemy looks for to know where the database is
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+
+#disabling the feature that uses extra memory
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-# this will connect the database to the flask app
+
+#connecting the database to my flask app
 lilydb.init_app(app)
 
-# creating tables on startup
-# reads my class definitions and creates tables in PostgreSQL if they don't exist
+#create the tables if they are not existed yet
 with app.app_context():
-    lilydb.create_all()
-
-
+    try:
+        lilydb.create_all()
+        print("Worth the drive database's tables are ready")
+    except Exception as e:
+        print(f"Having trouble in creating worth the drive database: {e}")
 
 # option lists, CONSTANT VALUES 
 
