@@ -211,7 +211,7 @@ function TripForm({ onResult })
     {
       try{
         const res = await fetch (
-          ` ${API_URL}/api/vehicles/makes?year=${formData.year}`
+          `${API_URL}/api/vehicles/makes?year=${formData.year}`
         );
         const data = await res.json();
         setMakes(data);
@@ -236,7 +236,7 @@ function TripForm({ onResult })
     {
       try {
         const res = await fetch (
-          ` ${API_URL}/api/vehicles/models?year=${formData.year}&make=${formData.make}`
+          `${API_URL}/api/vehicles/models?year=${formData.year}&make=${formData.make}`
         );
         const data = await res.json();
         setModels(data);
