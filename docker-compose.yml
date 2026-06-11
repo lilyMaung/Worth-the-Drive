@@ -1,5 +1,7 @@
 
 
+version: "3.8"
+
 services:
 
   backend:
@@ -12,3 +14,13 @@ services:
     volumes:
       - .:/app
     restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: worth-the-drive-frontend
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    depends_on:
+      - backend
