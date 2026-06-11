@@ -30,8 +30,7 @@ app = Flask(__name__)
 CORS(app, origins=['http://localhost:3000',
                    #will update after vercel deployment
                    'https://worth-the-drive-lily.vercel.app',
-                    'https://worth-the-drive-lily.onrender.com'
-                   
+                    
                    ])
 
 # connecting the database to flask
@@ -291,7 +290,7 @@ def get_models():
 def trip_history():
     try:
         trips = TripHistory.query\
-            .order_by(TripHistory.create_at.desc())\
+            .order_by(TripHistory.created_at.desc())\
             .limit(10)\
             .all()
         return jsonify([t.to_dict() for t in trips]), 200
