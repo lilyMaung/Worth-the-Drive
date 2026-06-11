@@ -179,7 +179,7 @@ def calculate():
         return jsonify({
         "error": "Something went wrong. Please try again."
     }), 500
-
+    
 #autocomplete functions for location
 @app.route("/api/autocomplete", methods=["GET"])
 def autocomplete():
