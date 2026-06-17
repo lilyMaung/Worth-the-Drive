@@ -1,16 +1,8 @@
 import React, { useState , useEffect} from 'react';
 import Select from 'react-select';
 
-// Prefer explicit env var, otherwise call same-origin `/api` (useful when frontend
-// and backend are served from the same host or behind a proxy). This is safer
-// than an empty string because fetch calls will go to `/api/...` by default.
-const API_URL = process.env.REACT_APP_API_URL || '';
 
-// Helper to build the full API path. If REACT_APP_API_URL is set we use it
-// (trim trailing slashes); otherwise we make relative calls like `/api/...`.
-const apiBase = API_URL ? API_URL.replace(/\/+$/,'') : '';
-const api = (path) => (apiBase ? `${apiBase}${path}` : path);
-
+const API_URL = "https://worth-the-drive-lily.onrender.com";
 
 //useEffect lets my code run when sth changes
 // valid options - must match Flask backend exactly
@@ -218,7 +210,7 @@ function TripForm({ onResult })
     const fetchMakes = async () => 
     {
       try{
-        const res = await fetch(api(`/api/vehicles/makes?year=${formData.year}`));
+        const res = await fetch(`${API_URL}/api/vehicles/makes?year=${formData.year}`);
         const data = await res.json();
         setMakes(data);
       }catch 
@@ -241,7 +233,7 @@ function TripForm({ onResult })
     const fetchModels = async () =>
     {
       try {
-        const res = await fetch(api(`/api/vehicles/models?year=${formData.year}&make=${formData.make}`));
+        const res = await fetch(`${API_URL}/api/vehicles/models?year=${formData.year}&make=${formData.make}`);
         const data = await res.json();
         setModels(data);
       }
@@ -270,7 +262,7 @@ function TripForm({ onResult })
 
     try {
       // call Flask API
-  const response = await fetch(api('/api/calculate'), {
+  const response = await fetch(`${API_URL}/api/calculate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
