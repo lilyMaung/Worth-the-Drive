@@ -210,7 +210,7 @@ function TripForm({ onResult })
     const fetchMakes = async () => 
     {
       try{
-        const res = await fetch(`${API_URL}/api/vehicles/makes?year=${formData.year}`);
+        const res = await fetch(`https://worth-the-drive-lily.onrender.com/api/vehicles/makes?year=${formData.year}`);
         const data = await res.json();
         setMakes(data);
       }catch 
@@ -233,7 +233,7 @@ function TripForm({ onResult })
     const fetchModels = async () =>
     {
       try {
-        const res = await fetch(`${API_URL}/api/vehicles/models?year=${formData.year}&make=${formData.make}`);
+        const res = await fetch(`https://worth-the-drive-lily.onrender.com/api/vehicles/models?year=${formData.year}&make=${formData.make}`);
         const data = await res.json();
         setModels(data);
       }
@@ -262,7 +262,7 @@ function TripForm({ onResult })
 
     try {
       // call Flask API
-  const response = await fetch(`${API_URL}/api/calculate`, {
+  const response = await fetch(`https://worth-the-drive-lily.onrender.com/api/calculate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
