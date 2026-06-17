@@ -30,12 +30,9 @@ app = Flask(__name__)
 # Configure CORS origins. Use FRONTEND_ORIGIN env var to allow the deployed
 # frontend (set this in Render or your hosting provider). We always allow
 # localhost:3000 for local development.
-frontend_origin = os.getenv("FRONTEND_ORIGIN", "https://worth-the-drive-lily.vercel.app")
-cors_origins = ["http://localhost:3000"]
-if frontend_origin:
-    cors_origins.append(frontend_origin)
 
-CORS(app, origins=cors_origins)
+
+CORS(app)
 
 # connecting the database to flask
 # configuring the database url
