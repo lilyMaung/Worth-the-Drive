@@ -51,12 +51,19 @@ For this example, I chose from San Jost to Berkeley!
 Features
 
 🔍 City Autocomplete — type a city, see suggestions instantly (Geoapify)
+
 🚘 Smart Vehicle Lookup — type your year, make/model dropdowns auto-populate from NHTSA
+
 ⛽ Live Gas Prices — this week's actual price for your state from US Energy Dept
+
 🛣️ Real Routing — actual driving miles via OpenStreetMap OSRM engine
+
 🚦 Traffic Adjustment — adjusts MPG for city, mixed, or highway conditions
+
 💾 Trip History — calculations persist to PostgreSQL
+
 📱 Fully Responsive — works on mobile, tablet, and desktop
+
 🌙 Dark Mode UI — elegant dark theme with custom design tokens
 
 Architecture of Worth the Drive
@@ -66,48 +73,23 @@ Architecture of Worth the Drive
 Architecture Pattern: Layered Modular Monolith
 
 API Layer — HTTP routing, validation, error responses
+
 Orchestration Layer — coordinates 3 external services
+
 Service Layer — one file per external API, single responsibility
+
 Domain Layer — business logic, cost calculation, database models
 
 🛠️ Tech Stack
 
-Backend
+<img width="1084" height="498" alt="image" src="https://github.com/user-attachments/assets/338fa34a-5635-4dd7-9d66-aa25d6b00652" />
 
-Technology                          Purpose 
 
-Python 3.9                          Language
-Flask 3.1                           Web Framework
-Flask SQLAlchemy                    ORM for PostgreSQL
-Flask CORS                          Cross origin resources sharing
-Gunicorn                            Production WSGI Server
-Python dotenv                       Environment variable management
-xmltodict                           XML --> Python dict parsing
+<img width="978" height="298" alt="image" src="https://github.com/user-attachments/assets/c31046a3-ef45-46fd-906b-a657c6398494" />
 
-Frontend
+<img width="1108" height="342" alt="image" src="https://github.com/user-attachments/assets/a51e377f-d3de-4001-8079-d3a6274d2b2a" />
 
-React 18                            UI Framework with hooks
-Tailwind CSS                        Utility first styling
-React select                        Searchable state dropdown
-JavaScript ES6+                     Language
-
-Database & Infrastructure
-
-PostgreSQL                          Trip history persistence
-Supabase                            Managed PostgreSQL hosting
-Docker                              Containerization (backend + frontend)
-Render                              Backend hosting (free tier)
-Vercel                              Frontend hosting + CDN (free tier)
-
-External APIs
-
-API                      Data                         Provider
-
-fueleconomy.gov          Vehicle MPG ratings          US Dept of Transportation
-EIA API                  Weekly gas prices by state   US Energy Information Administration
-OSRM                     Driving distances + routing  OpenStreetMap
-Nominatim                Geocoding                    OpenStreetMap
-Geoapify                 City autocomplete            Geoapify
+<img width="1168" height="440" alt="image" src="https://github.com/user-attachments/assets/7cf38c23-76bc-4e4d-8eec-c5d077d681b0" />
 
 
 🚀 Run Locally
@@ -122,8 +104,11 @@ Free API keys (instructions below)
 Option A — Run with Docker (recommended)
 
 git clone https://github.com/lilyMaung/Worth-the-Drive.git
+
 cd Worth-the-Drive
+
 cp .env.example .env   # fill in your API keys
+
 docker compose up --build
 
 Backend available at http://localhost:8080
@@ -133,16 +118,23 @@ Option B — Run manually
 Backend:
 
 bashpython3 -m venv venv
+
 source venv/bin/activate
+
 pip install -r requirements.txt
+
 cp .env.example .env   # fill in your API keys
+
 python3 app.py
 
 Frontend:
 
 bashcd frontend
+
 npm install
+
 cp .env.example .env   # add your Geoapify key
+
 npm start
 
 Open http://localhost:3000
