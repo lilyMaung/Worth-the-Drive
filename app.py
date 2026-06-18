@@ -124,7 +124,7 @@ def validate_inputs(data):
 @app.route("/api/health", methods=["GET"])
 def health():
     #if successful
-    return jsonify ({"status":"ok"}), 200
+    return jsonify ({"status":"ok", "version":"test123"}), 200
 
 # routing to calculate
 @app.route("/api/calculate", methods=["POST"])
