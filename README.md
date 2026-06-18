@@ -61,30 +61,7 @@ Features
 
 Architecture of Worth the Drive
 
-┌─────────────────────────────────────────────────────┐
-│              React Frontend (Vercel CDN)             │
-│       App.js → TripForm.js → ResultCard.js            │
-└──────────────────────┬────────────────────────────────┘
-                       │ REST API (HTTPS + JSON)
-┌──────────────────────▼────────────────────────────────┐
-│              Flask Backend (Render)                   │
-│                                                        │
-│  app.py         → API layer + input validation        │
-│  database.py    → SQLAlchemy models (TripHistory)      │
-│  services/                                             │
-│    calculator.py → orchestration layer                 │
-│    nhtsa.py      → vehicle MPG (XML parsing)            │
-│    eia.py        → gas prices by state                  │
-│    osrm.py       → routing + geocoding                  │
-└──────┬──────────────────┬──────────────┬──────────────┘
-       ▼                  ▼              ▼
-  fueleconomy.gov      EIA API        OSRM API
-  (NHTSA MPG data)  (gas prices)    (distances)
-       │
-       ▼
-  PostgreSQL (Supabase)
-  trip_history table
-  
+  <img width="924" height="1028" alt="image" src="https://github.com/user-attachments/assets/e06ca662-9dfd-4772-af74-e6904f143579" />
 
 Architecture Pattern: Layered Modular Monolith
 
@@ -172,31 +149,8 @@ Open http://localhost:3000
 
 Worth the Drive Structure
 
-Worth-the-Drive/
-├── app.py                 # Flask API — routes, validation, CORS
-├── database.py            # SQLAlchemy models (TripHistory)
-├── requirements.txt
-├── Dockerfile              # Backend container config
-├── docker-compose.yml      # Multi-service orchestration
-├── .env.example
-│
-├── Models/
-│   └── models.py           # Car, Trip, GasEstimate domain classes
-│
-├── services/
-│   ├── calculator.py        # Orchestrates the 3 external services
-│   ├── nhtsa.py             # NHTSA vehicle MPG — XML API
-│   ├── eia.py                # EIA gas price — JSON API
-│   └── osrm.py                # OSRM routing + Nominatim geocoding
-│
-└── frontend/
-    ├── public/
-    └── src/
-        ├── App.js
-        ├── index.css
-        └── components/
-            ├── TripForm.js
-            └── ResultCard.js
+<img width="1106" height="1024" alt="image" src="https://github.com/user-attachments/assets/f9fecf80-44b5-4756-a7bf-b8dfc107fe5d" />
+
 
 I will try to come back do the Redis caching and CI/CD pipeline.
 
