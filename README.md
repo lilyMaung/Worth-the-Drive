@@ -1,8 +1,19 @@
-Worth the Drive
+<div align="center">
+
+# ⛽ Worth the Drive
+
+**Find out if the gas is worth it before you go.**
+
 
 <img width="1314" height="1102" alt="image" src="https://github.com/user-attachments/assets/c0b7d71a-f16e-438e-ac7c-4e727f99120e" />
 
-Before explaining about the project, I will tell you why I decided to build this project. 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Site-22c55e?style=for-the-badge&logo=vercel&logoColor=white)](https://worth-the-drive.vercel.app)
+[![Python](https://img.shields.io/badge/Python-3.11-3b82f6?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![Flask](https://img.shields.io/badge/Flask-Backend-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
+
+*Before explaining about the project, I will tell you why I decided to build this project. 
 As a software engineering student at SJSU, I was looking forward to building my very first own project.
 At first, I tried to do the usual way, following tutorials from youtube but it made me feel bored and I couldn't do it.
 One day, my friend and I were talking about where to go eat after school. 
@@ -15,139 +26,228 @@ Then I started building this, at first, it was only with python as I was learnin
 I started to add one after another, the whole learning process was very exciting to me as I was learning to build things that I am actually interested in.
 Ofcourse there was debugging moments and vercel telling me about my failed deployments, which make me lose my hair but before, during and after this project is finished, I feel joy and it makes all worth it.
 Anyway, this is a little note that I have for my very first own personal full stack project.
-I will build more amazing things in the future too so follow along!
+I will build more amazing things in the future too so follow along!*
 
+</div>
 
-Worth the Drive 
+---
 
-Most trip planners tell you how long a drive takes but not how much fuel gonna cost.
+## 🎯 The Problem
 
-Worth the Drive solves this by combining three live US government data sources.
+Most trip planners tell you **how long** a drive takes. None tell you **how much it'll cost**.
 
-This is where you will put your destination, your car information and the road.
+I built Worth the Drive to answer the real question: *"Is this drive actually worth it?"* — by combining three live U.S. government data sources into one real-time fuel cost calculator.
 
-<img width="1438" height="1348" alt="image" src="https://github.com/user-attachments/assets/33150582-cc1f-4d97-a0d7-ea871928443a" />
+---
 
+## ✨ Features
 
-How far is the drive?
+| Feature | Description |
+|---|---|
+| 🔍 **City Autocomplete** | Instant suggestions as you type via Geoapify |
+| 🚘 **Smart Vehicle Lookup** | Year → Make → Model dropdowns auto-populated from NHTSA |
+| ⛽ **Live Gas Prices** | This week's actual prices by state from the U.S. Energy Dept (EIA) |
+| 🛣️ **Real Routing** | Actual driving miles via OpenStreetMap OSRM engine |
+| 🚦 **Traffic Adjustment** | City / Mixed / Highway MPG modes |
+| 💾 **Trip History** | Calculations persist to PostgreSQL |
+| 📱 **Fully Responsive** | Works on mobile, tablet, and desktop |
+| 🌙 **Dark Mode UI** | Custom design tokens, premium dark aesthetic |
 
-That will be taken care by an API named OSRM(aka OpenStreetMap) which will do the real routing of your start and destination.
+---
 
-How efficient is my car?
+## 🧠 How It Works
 
-It's also important to know what car you are driving, and that will be helped by an API called NHTSA fueleconomy.gov with real EPA ratings.(Your car's MPG)
-The MPG will be calculated automatically depending on your car model, years and make.
+Worth the Drive chains three independent government APIs in a single request:
 
-How much is gas right now??
+```
+User Input
+    │
+    ├─── OSRM (OpenStreetMap)     →  Real driving distance (miles)
+    ├─── NHTSA / fueleconomy.gov  →  Your car's EPA-rated MPG
+    └─── EIA Energy API           →  This week's gas price for your state
+              │
+              ▼
+         Flask Backend
+    (Orchestration + Calculation)
+              │
+              ▼
+    Gallons Used × Gas Price = Your Trip Cost  💸
+```
 
-The real purpose of this project, after getting information on your destination, car and your road, our project python backend will calculate with data fetched from EIA Energy API with the real gas price.
-And after all these factors were executed, your gas price for the trip, your car's MPG,  and how many gallons you are using for this trip will be calculated as below.
+**Example:** San Jose → Berkeley
 
-For this example, I chose from San Jost to Berkeley!
+> Distance: 48.2 mi · MPG: 32 (city) · Gas: $4.87/gal → **$7.33 total**
 
-<img width="1522" height="1290" alt="image" src="https://github.com/user-attachments/assets/57ce6daa-65cf-42db-a1b9-505059757151" />
+---
 
+## 🏗️ Architecture
 
-Features
+```
+┌─────────────────────────────────────────────────┐
+│                  React Frontend                  │
+│   Autocomplete · Vehicle Selector · Results UI  │
+└──────────────────────┬──────────────────────────┘
+                       │ HTTP / REST
+┌──────────────────────▼──────────────────────────┐
+│               Flask API Layer                    │
+│         Validation · Routing · Errors           │
+├─────────────────────────────────────────────────┤
+│            Orchestration Layer                   │
+│       Coordinates 3 external API calls          │
+├──────────────┬──────────────┬───────────────────┤
+│ NHTSA Service│  EIA Service │   OSRM Service    │
+│  (Car MPG)   │ (Gas Prices) │  (Route Miles)    │
+├─────────────────────────────────────────────────┤
+│            Domain Layer                          │
+│   Cost Calculation · DB Models · Business Logic │
+└──────────────────────┬──────────────────────────┘
+                       │
+              ┌────────▼────────┐
+              │   PostgreSQL    │
+              │  (Trip History) │
+              └─────────────────┘
+```
 
-🔍 City Autocomplete — type a city, see suggestions instantly (Geoapify)
+**Pattern:** Layered Modular Monolith — one file per external service, single responsibility throughout.
 
-🚘 Smart Vehicle Lookup — type your year, make/model dropdowns auto-populate from NHTSA
+---
 
-⛽ Live Gas Prices — this week's actual price for your state from US Energy Dept
+## 🛠️ Tech Stack
 
-🛣️ Real Routing — actual driving miles via OpenStreetMap OSRM engine
+### Backend
+| Tool | Role |
+|---|---|
+| **Python 3.11 + Flask** | REST API, orchestration, business logic |
+| **PostgreSQL + Supabase** | Trip history persistence |
+| **Render** | Cloud deployment |
 
-🚦 Traffic Adjustment — adjusts MPG for city, mixed, or highway conditions
+### Frontend
+| Tool | Role |
+|---|---|
+| **React 18** | Component-based UI |
+| **Vercel** | Static deployment + CDN |
 
-💾 Trip History — calculations persist to PostgreSQL
+### External APIs
+| API | Data |
+|---|---|
+| [NHTSA / fueleconomy.gov](https://www.fueleconomy.gov/feg/ws/) | EPA-rated MPG by year/make/model |
+| [EIA Energy API](https://www.eia.gov/opendata/) | Weekly gas prices by U.S. state |
+| [OSRM](http://project-osrm.org/) | Real driving distance + routing |
+| [Geoapify](https://www.geoapify.com/) | City name autocomplete |
 
-📱 Fully Responsive — works on mobile, tablet, and desktop
+---
 
-🌙 Dark Mode UI — elegant dark theme with custom design tokens
+## 📁 Project Structure
 
-Architecture of Worth the Drive
+```
+Worth-the-Drive/
+├── app.py                      # Flask entry point
+├── routes/
+│   └── calculate.py            # API route handlers
+├── services/
+│   ├── nhtsa_service.py        # Vehicle & MPG lookups
+│   ├── eia_service.py          # Gas price by state
+│   └── osrm_service.py         # Route distance
+├── domain/
+│   ├── calculator.py           # Core cost calculation logic
+│   └── models.py               # PostgreSQL models
+├── frontend/
+│   ├── src/
+│   │   ├── components/         # React UI components
+│   │   └── App.jsx
+│   └── package.json
+├── requirements.txt
+└── docker-compose.yml
+```
 
-  <img width="924" height="1028" alt="image" src="https://github.com/user-attachments/assets/e06ca662-9dfd-4772-af74-e6904f143579" />
+---
 
-Architecture Pattern: Layered Modular Monolith
+## 🚀 Run Locally
 
-API Layer — HTTP routing, validation, error responses
+### Prerequisites
+- Python 3.9+
+- Node.js 18+
+- Free API keys: [EIA](https://www.eia.gov/opendata/) · [Geoapify](https://www.geoapify.com/)
 
-Orchestration Layer — coordinates 3 external services
+### Option A — Docker (recommended)
 
-Service Layer — one file per external API, single responsibility
-
-Domain Layer — business logic, cost calculation, database models
-
-🛠️ Tech Stack
-
-<img width="1084" height="498" alt="image" src="https://github.com/user-attachments/assets/338fa34a-5635-4dd7-9d66-aa25d6b00652" />
-
-
-<img width="978" height="298" alt="image" src="https://github.com/user-attachments/assets/c31046a3-ef45-46fd-906b-a657c6398494" />
-
-<img width="1108" height="342" alt="image" src="https://github.com/user-attachments/assets/a51e377f-d3de-4001-8079-d3a6274d2b2a" />
-
-<img width="1168" height="440" alt="image" src="https://github.com/user-attachments/assets/7cf38c23-76bc-4e4d-8eec-c5d077d681b0" />
-
-
-🚀 Run Locally
-
-Prerequisites
-
-Python 3.9+
-Node.js 18+
-Docker Desktop (optional, for containerized run)
-Free API keys (instructions below)
-
-Option A — Run with Docker (recommended)
-
+```bash
 git clone https://github.com/lilyMaung/Worth-the-Drive.git
-
 cd Worth-the-Drive
-
-cp .env.example .env   # fill in your API keys
-
+cp .env.example .env        # fill in your API keys
 docker compose up --build
+```
 
-Backend available at http://localhost:8080
+Backend → http://localhost:8080
 
-Option B — Run manually
+### Option B — Manual
 
-Backend:
-
-bashpython3 -m venv venv
-
+```bash
+# Backend
+python3 -m venv venv
 source venv/bin/activate
-
 pip install -r requirements.txt
-
-cp .env.example .env   # fill in your API keys
-
+cp .env.example .env
 python3 app.py
 
-Frontend:
-
-bashcd frontend
-
+# Frontend (new terminal)
+cd frontend
 npm install
-
-cp .env.example .env   # add your Geoapify key
-
+cp .env.example .env        # add your Geoapify key
 npm start
+```
 
-Open http://localhost:3000
+Frontend → http://localhost:3000
 
-Worth the Drive Structure
+---
 
-<img width="1106" height="1024" alt="image" src="https://github.com/user-attachments/assets/f9fecf80-44b5-4756-a7bf-b8dfc107fe5d" />
+## 🔑 Environment Variables
 
+```env
+# Backend (.env)
+EIA_API_KEY=your_key_here
+DATABASE_URL=your_supabase_connection_string
 
-I will try to come back do the Redis caching and CI/CD pipeline.
+# Frontend (.env)
+REACT_APP_GEOAPIFY_KEY=your_key_here
+REACT_APP_API_URL=http://localhost:8080
+```
 
-Lily Maung
+---
 
+## 💡 What I Learned
+
+This was my **first personal full-stack project**, and I built it to solve a real problem I had. Key lessons:
+
+- **API orchestration** — chaining three independent services with different response shapes, error modes, and rate limits
+- **Layered architecture** — separating concerns so each layer has a single job
+- **Database connectivity** — debugging Supabase IPv4/IPv6 routing through the connection pooler
+- **Deployment pipelines** — tracing Vercel + Render failures to environment config and uncommitted changes
+- **UI/UX iteration** — multiple redesign passes to reach a dark premium aesthetic that felt polished
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Redis caching for repeated API calls (reduce latency + API usage)
+- [ ] CI/CD pipeline (GitHub Actions)
+- [ ] EV cost comparison mode
+- [ ] Share trip link functionality
+
+---
+
+## 👩‍💻 Author
+
+**Lily Maung** — Software Engineering student @ San Jose State University
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/lily-maung)
+[![GitHub](https://img.shields.io/badge/GitHub-@lilyMaung-181717?style=flat-square&logo=github)](https://github.com/lilyMaung)
+
+---
+
+<div align="center">
+  <sub>Built with curiosity, debugging tears, and a very strong opinion about gas prices as a person without a car, Lily.</sub>
+</div>
 
 
 
